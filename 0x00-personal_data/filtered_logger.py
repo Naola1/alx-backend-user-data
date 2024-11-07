@@ -48,3 +48,12 @@ def get_logger() -> logging.Logger:
     sh.setFormatter(RedactingFormatter(PII_FIELDS))
     lg.addHandler(sh)
     return lg
+
+def get_db() -> mysql.connector.connection.MySQLConnection:
+    """ connect to MySQL database """
+    return mysql.connector.connect(
+        host=os.getenv("PERSONAL_DATA_DB_HOST", "root"),
+        database=os.getenv("PERSONAL_DATA_DB_NAME"),
+        user=os.getenv("PERSONAL_DATA_DB_USERNAME", "localhost"),
+        password=os.getenv("PERSONAL_DATA_DB_PASSWORD", ""),
+    )
