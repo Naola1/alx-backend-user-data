@@ -38,3 +38,13 @@ def filter_datum(fields: List[str], redaction: str, message: str,
     return re.sub(r"(\w+)=([a-zA-Z0-9@\.\-\(\)\ \:\^\<\>\~\$\%\@\?\!\/]*)",
                   lambda match: match.group(1) + "=" + redaction
                   if match.group(1) in fields else match.group(0), message)
+
+def get_logger() -> logging.Logger:
+    """ return a logger object """
+    lg = logging.getLogger("user_data")
+    lg.setLevel(logging.INFO)
+    lg.propagate = False
+    sh = logging.StreamHandler()
+    sh.setFormatter(RedactingFormatter(PII_FIELDS))
+    lg.addHandler(sh)
+    return lg
