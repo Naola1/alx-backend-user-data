@@ -29,3 +29,31 @@ class DB:
             DBSession = sessionmaker(bind=self._engine)
             self.__session = DBSession()
         return self.__session
+
+    def add_user(self, email: str, hashed_password: str) -> User:
+        """add user to database
+
+        Args:
+            email (string): email of user
+            hashed_password (string): password of user
+        Returns:
+            User: user created
+        """
+        if not email or not hashed_password:
+            return
+        user = User(email=email, hashed_password=hashed_password)
+        session = self._session
+        session.add(user)
+        session.commit()
+        return user
+
+    def find_user_by(self, **kwargs) -> User:
+        """find user by some arguments
+
+        Returns:
+            User: user found or raise error
+        """
+        user = self._session.query(User).filter_by(**kwargs).first()
+        if not user:
+            raise NoResultFound
+        return user
