@@ -68,3 +68,19 @@ def valid_login(self, email: str, password: str) -> bool:
         except NoResultFound:
             return False
         return checkpw(password.encode('utf-8'), user.hash_password)
+
+def create_session(self, email: str) -> str:
+        """create a new session for user
+
+        Args:
+            email (str): email of user
+
+        Returns:
+            str: string representation of session ID
+        """
+        try:
+            user = self._db.find_user_by(email=email)
+            session_id = _generate_uuid()
+            self._db.update_user(user.id, session_id=session_id)
+        except NoResultFound:
+            return
